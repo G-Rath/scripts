@@ -4,6 +4,12 @@
 wp_cli() {
   local pwd_owner=$(stat -c '%U' .)
   local all_args=$@
+  local path=$PWD
 
-  sudo -u $pwd_owner -i bash -c "wp7.2-sp --path="$PWD" $all_args"
+  # respect configu path if present
+  if [ -f "wp-cli.yml" ]; then
+     path=$path/$(grep -Po "path: \K.+" wp-cli.yml)
+  fi
+
+  sudo -u $pwd_owner -i bash -c "wp7.2-sp --path="$path" $all_args"
 }
