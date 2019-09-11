@@ -12,5 +12,5 @@ wp_cli() {
      path=$path/$(grep -Po "path: \K.+" wp-cli.yml)
   fi
 
-  sudo -u $pwd_owner -i bash -c "wp7.2-sp --path="$path" $all_args"
+  sudo -u "$pwd_owner" -i bash -c "wp7.2-sp --path="$path" $all_args"
 }
