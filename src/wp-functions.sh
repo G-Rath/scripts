@@ -2,10 +2,12 @@
 
 # runs wp7.2-sp as the owner of the current directory
 wp_cli() {
-  # not the most portable method, but it'll do...
-  local pwd_owner=$(stat -c '%U' .)
+  local pwd_owner
   local all_args=$@
   local path=$PWD
+
+  # not the most portable method, but it'll do
+  pwd_owner=$(stat -c '%U' .)
 
   # respect configu path if present
   if [ -f "wp-cli.yml" ]; then
