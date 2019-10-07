@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+project_paths=$(ls -1d "$WWORKSPACE"/projects-*/*/ "$WWORKSPACE"/prefer-projects/*/ "$WWORKSPACE"/personal-projects/*/ | grep "$1")
+
+echo "$project_paths"
+project_path=$(echo "$project_paths" | head -n1)
+
+# only list projects if we don't pass an arg
+if [ -z "$1" ]; then exit; fi
+cd "$project_path" || exit
+
+command="$2"
+
+if [ -z "$command" ]; then exit; fi
+$command
