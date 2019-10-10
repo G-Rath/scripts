@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+echo "$@" | xargs -n1 npm_update_package_and_commit

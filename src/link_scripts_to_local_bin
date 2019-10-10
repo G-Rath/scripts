@@ -17,9 +17,11 @@ scripts=(
   "link_scripts_to_local_bin"
   "npm_audit_fix_and_push"
   "npm_update_package_and_commit"
+  "npm_update_package_and_commit_multiple"
 )
 
 for script in "${scripts[@]}"; do
   chmod +x "$DIR/$script"
+  echo "linking $script"
   ln -sf "$DIR/$script" /usr/local/bin/
 done
