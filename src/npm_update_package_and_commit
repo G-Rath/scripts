@@ -31,7 +31,7 @@ echo "updating $package@$cur_version"
 if [ ! -f "package-lock.json" ]; then
   if [ ! -f "yarn.lock" ]; then echo "lock file not found" && exit; fi
 
-  yarn upgrade "$package@$target"
+  yarn add "$package@$target"
   lock_file="yarn.lock"
 else
   npm i --package-lock-only "$package@$target"
