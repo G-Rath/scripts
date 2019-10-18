@@ -12,6 +12,7 @@ done
 DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
 
 scripts=(
+  "mknano"
   "mktouch"
   "cd_to_project"
   "git_commit_file_as_executable"
