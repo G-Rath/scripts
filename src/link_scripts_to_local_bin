@@ -15,7 +15,7 @@ scripts=(
   "mknano"
   "mktouch"
   "cd_to_project"
-  "git_commit_file_as_executable"
+  "git_add_file_as_executable"
   "git_rename_and_commit"
   "link_scripts_to_local_bin"
   "npm_audit_fix_and_push"
