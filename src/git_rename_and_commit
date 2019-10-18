@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+old_name="${1:?'first arg must be old file name'}"
+new_name="${2:?'second arg must be new file name'}"
+
+if [ ! -f "$old_name" ]; then
+  echo "'$old_name' cannot be found"
+  exit
+fi
+
+if [ -f "$new_name" ]; then
+  echo "'$new_name' already exists"
+  exit
+fi
+
+git mv "$old_name" "$new_name"
+
+git commit \
+  "$old_name" "$new_name" \
+  -m "Rename \`$old_name\` to \`$new_name\`"
+
