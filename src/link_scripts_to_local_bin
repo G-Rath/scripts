@@ -12,8 +12,10 @@ done
 DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
 
 scripts=(
+  "mktouch"
   "cd_to_project"
   "git_commit_file_as_executable"
+  "git_rename_and_commit"
   "link_scripts_to_local_bin"
   "npm_audit_fix_and_push"
   "npm_update_package_and_commit"

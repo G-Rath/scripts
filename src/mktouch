@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+p="$1"
+
+mkdir -p "$(dirname "$p")"
+touch "$1"
