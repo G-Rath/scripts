@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# you'll need to pass "--profile profile" when calling this
+
+aws ssm get-parameters \
+  --names /aws/service/ecs/optimized-ami/amazon-linux/recommended \
+  --query 'Parameters[0].Value' \
+  "$@" |
+  jq -r 'fromjson | .image_id'

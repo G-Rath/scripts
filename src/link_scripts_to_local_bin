@@ -18,6 +18,7 @@ scripts=(
   "git_add_file_as_executable"
   "git_rename_and_commit"
   "git_compare_branches"
+  "aws_get_ami_of_latest_ecs_optimized_linux"
   "link_scripts_to_local_bin"
   "npm_audit_fix_and_push"
   "npm_update_package_and_commit"
