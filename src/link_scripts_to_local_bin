@@ -19,6 +19,7 @@ scripts=(
   "git_rename_and_commit"
   "git_compare_branches"
   "gen_ts_barrel"
+  "gen_ts_function"
   "gen_ts_function_spec"
   "aws_get_ami_of_latest_ecs_optimized_linux"
   "link_scripts_to_local_bin"

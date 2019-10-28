@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+
+update_barrel=false
+gen_spec=false
+
+options=$(getopt -o b::,g::,s:: --long update-barrel::,git-add::,spec:: -- "$@") || exit
+eval set -- "$options"
+
+while true; do
+  case "$1" in
+  -b | --update-barrel)
+    update_barrel=true
+    shift 2
+    ;;
+  -g | --git-add)
+    repo_path=$(git rev-parse --show-toplevel) || exit
+    shift 2
+    ;;
+  -s | --spec)
+    gen_spec=true
+    shift 2
+    ;;
+  --)
+    shift
+    break
+    ;;
+  *)
+    echo "Internal error!"
+    exit 1
+    ;;
+  esac
+done
+
+function_name=${1:?"function name is required"}
+
+add_if_in_repo() {
+  local file_name="$1"
+
+  if [ "$repo_path" ]; then
+    git add "$file_name"
+  fi
+}
+
+cat <<TS_FUNCTION >"$function_name.ts"
+export const $function_name = () => {
+  //
+}
+TS_FUNCTION
+
+add_if_in_repo "$function_name.ts"
+
+if [ "$update_barrel" = true ]; then
+  if [ -f "index.ts" ]; then
+    export_text="export * from './$function_name'"
+
+    if ! grep -qF "$export_text" "index.ts"; then
+      echo "$export_text;" >>"index.ts"
+    fi
+  fi
+fi
+
+if [ "$gen_spec" = true ]; then
+  if [ "$repo_path" ]; then
+    add_flag="-g"
+  fi
+
+  repo_path=$(git rev-parse --show-toplevel) || exit
+  test_dir="$repo_path/test/$(realpath "$PWD" --relative-to="$repo_path")"
+
+  (cd "$test_dir" && gen_ts_function_spec $add_flag "$function_name")
+fi
