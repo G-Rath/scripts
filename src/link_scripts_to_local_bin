@@ -21,6 +21,7 @@ scripts=(
   "gen_ts_barrel"
   "gen_ts_function"
   "gen_ts_function_spec"
+  "gen_ts_function_specs"
   "aws_get_ami_of_latest_ecs_optimized_linux"
   "link_scripts_to_local_bin"
   "npm_audit_fix_and_push"

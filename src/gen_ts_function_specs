@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+for name in "$@"; do
+  gen_ts_function_spec "$name"
+done
