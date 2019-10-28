@@ -17,6 +17,7 @@ scripts=(
   "cd_to_project"
   "git_add_file_as_executable"
   "git_rename_and_commit"
+  "git_compare_branches"
   "link_scripts_to_local_bin"
   "npm_audit_fix_and_push"
   "npm_update_package_and_commit"
