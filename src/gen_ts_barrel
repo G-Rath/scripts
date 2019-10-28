@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+output_file=${1:-index.ts}
+
+options=$(getopt -o b::,g::,s:: --long update-barrel::,git-add::,spec:: -- "$@") || exit
+eval set -- "$options"
+
+while true; do
+  case "$1" in
+  -g | --git-add)
+    repo_path=$(git rev-parse --show-toplevel) || exit
+    shift 2
+    ;;
+  --)
+    shift
+    break
+    ;;
+  *)
+    echo "Internal error!"
+    exit 1
+    ;;
+  esac
+done
+
+add_if_in_repo() {
+  local file_name="$1"
+
+  if [ "$repo_path" ]; then
+    git add "$file_name"
+  fi
+}
+
+join_by() {
+  local d=$1
+  shift
+  echo -n "$1"
+  shift
+  printf "%s" "${@/#/$d}"
+}
+
+declare -a exports
+
+# todo: support options, such as exporting via export { aws } from './file' (namespace)
+
+for filename in ./*.ts; do
+  if [[ ! "$filename" =~ index\.ts$ ]]; then
+    exports+=("export * from '${filename%.ts}';")
+  fi
+done
+
+#for filename in ./**/index.ts; do
+#  export_var='*'
+
+  #  if [ namespace ]; then
+  #    export_var="{ ${filename%/index.ts} }"
+  #    export_var="${export_var#\.\/}"
+  #  fi
+
+#  exports+=("export $export_var from '${filename%/index.ts}'")
+#done
+
+echo "$(join_by $'\n' "${exports[@]}")" >"$output_file"
+
+add_if_in_repo "$output_file"
