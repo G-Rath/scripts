@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-output_file=${1:-index.ts}
-
 options=$(getopt -o b::,g::,s:: --long update-barrel::,git-add::,spec:: -- "$@") || exit
 eval set -- "$options"
 
@@ -21,6 +19,8 @@ while true; do
     ;;
   esac
 done
+
+output_file=${1:-index.ts}
 
 add_if_in_repo() {
   local file_name="$1"
@@ -43,7 +43,7 @@ declare -a exports
 # todo: support options, such as exporting via export { aws } from './file' (namespace)
 
 for filename in ./*.ts; do
-  if [[ ! "$filename" =~ index\.ts$ ]]; then
+  if [[ ! "$filename" =~ index\.ts$ ]] && [[ ! "$filename" =~ \.spec\.ts$ ]]; then
     exports+=("export * from '${filename%.ts}';")
   fi
 done
