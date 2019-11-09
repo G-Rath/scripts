@@ -31,7 +31,8 @@ while true; do
   esac
 done
 
-function_name=${1:?"function name is required"}
+function_path=${1:?"function name is required"}
+function_name="$(basename "$function_path")"
 
 add_if_in_repo() {
   local file_name="$1"
@@ -41,13 +42,13 @@ add_if_in_repo() {
   fi
 }
 
-cat <<TS_FUNCTION >"$function_name.ts"
+cat <<TS_FUNCTION >"$function_path.ts"
 export const $function_name = () => {
   //
 }
 TS_FUNCTION
 
-add_if_in_repo "$function_name.ts"
+add_if_in_repo "$function_path.ts"
 
 if [ "$update_barrel" = true ]; then
   if [ -f "index.ts" ]; then
@@ -67,5 +68,5 @@ if [ "$gen_spec" = true ]; then
   repo_path=$(git rev-parse --show-toplevel) || exit
   test_dir="$repo_path/test/$(realpath "$PWD" --relative-to="$repo_path")"
 
-  (cd "$test_dir" && gen_ts_function_spec $add_flag "$function_name")
+  (cd "$test_dir" && gen_ts_function_spec $add_flag "$function_path")
 fi
