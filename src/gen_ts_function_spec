@@ -20,7 +20,8 @@ while true; do
   esac
 done
 
-function_name=${1:?"function name is required"}
+function_path=${1:?"function name is required"}
+function_name="$(basename $function_path)"
 
 add_if_in_repo() {
   local file_name="$1"
@@ -30,10 +31,10 @@ add_if_in_repo() {
   fi
 }
 
-cat << TS_FUNCTION_SPEC > "$function_name.spec.ts"
+cat << TS_FUNCTION_SPEC > "$function_path.spec.ts"
 describe('$function_name', () => {
   //
 });
 TS_FUNCTION_SPEC
 
-add_if_in_repo "$function_name.spec.ts"
+add_if_in_repo "$function_path.spec.ts"
