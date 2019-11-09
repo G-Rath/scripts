@@ -1,12 +1,18 @@
 #!/usr/bin/env bash
 
-options=$(getopt -o b::,g::,s:: --long update-barrel::,git-add::,spec:: -- "$@") || exit
+options=$(getopt -o b::,g::,s:: --long update-barrel::,git-add::,spec::,file:: -- "$@") || exit
 eval set -- "$options"
+
+output_file="index.ts"
 
 while true; do
   case "$1" in
   -g | --git-add)
     repo_path=$(git rev-parse --show-toplevel) || exit
+    shift 2
+    ;;
+  --file)
+    output_file="$2"
     shift 2
     ;;
   --)
@@ -19,8 +25,6 @@ while true; do
     ;;
   esac
 done
-
-output_file=${1:-index.ts}
 
 add_if_in_repo() {
   local file_name="$1"
