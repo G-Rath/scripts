@@ -21,7 +21,7 @@ while true; do
 done
 
 function_path=${1:?"function name is required"}
-function_name="$(basename $function_path)"
+function_name="$(basename "$function_path")"
 
 add_if_in_repo() {
   local file_name="$1"
@@ -30,6 +30,8 @@ add_if_in_repo() {
     git add "$file_name"
   fi
 }
+
+mkdir -p "$(dirname "$function_path")"
 
 cat << TS_FUNCTION_SPEC > "$function_path.spec.ts"
 describe('$function_name', () => {
