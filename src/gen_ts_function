@@ -42,6 +42,8 @@ add_if_in_repo() {
   fi
 }
 
+mkdir -p "$(dirname "$function_path")"
+
 cat <<TS_FUNCTION >"$function_path.ts"
 export const $function_name = () => {
   //
