@@ -54,12 +54,14 @@ shopt -s nullglob
 for filename in $dir_path/{*,*/index}.ts; do
   file_path="$(realpath "$filename" --relative-to "$dir_path")"
 
+  if [ "$file_path" == "index.ts" ] || [[ "$file_path" =~ \.spec\.ts$ ]]; then
+    continue
+  fi
+
   # trim /index.ts off subfolders
   file_path="${file_path%/index.ts}"
 
-  if [ ! "$file_path" == "index.ts" ] && [[ ! "$file_path" =~ \.spec\.ts$ ]]; then
-    exports+=("export * from './${file_path%.ts}';")
-  fi
+  exports+=("export * from './${file_path%.ts}';")
 done
 
 #for filename in ./**/index.ts; do
