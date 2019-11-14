@@ -64,17 +64,6 @@ for filename in $dir_path/{*,*/index}.ts; do
   exports+=("export * from './${file_path%.ts}';")
 done
 
-#for filename in ./**/index.ts; do
-#  export_var='*'
-
-  #  if [ namespace ]; then
-  #    export_var="{ ${filename%/index.ts} }"
-  #    export_var="${export_var#\.\/}"
-  #  fi
-
-#  exports+=("export $export_var from '${filename%/index.ts}'")
-#done
-
 echo "$(join_by $'\n' "${exports[@]}")" >"$output_file"
 
 add_if_in_repo "$output_file"
