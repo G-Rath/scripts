@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 a=${1:?'a branch is required'}
-b=${2:?'b branch is required'}
+b=${2:-$(git rev-parse --abbrev-ref HEAD)}
 
 git log \
   --graph \
