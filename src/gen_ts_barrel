@@ -47,11 +47,17 @@ declare -a exports
 dir_path=${1:-'.'}
 output_file="$dir_path/$output_file"
 
+shopt -s nullglob
+
 # todo: support options, such as exporting via export { aws } from './file' (namespace)
 
-for filename in $dir_path/*.ts; do
-  if [[ ! "$filename" =~ index\.ts$ ]] && [[ ! "$filename" =~ \.spec\.ts$ ]]; then
-    file_path="$(realpath "$filename" --relative-to "$dir_path")"
+for filename in $dir_path/{*,*/index}.ts; do
+  file_path="$(realpath "$filename" --relative-to "$dir_path")"
+
+  # trim /index.ts off subfolders
+  file_path="${file_path%/index.ts}"
+
+  if [ ! "$file_path" == "index.ts" ] && [[ ! "$file_path" =~ \.spec\.ts$ ]]; then
     exports+=("export * from './${file_path%.ts}';")
   fi
 done
