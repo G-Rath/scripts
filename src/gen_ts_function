@@ -36,8 +36,9 @@ while true; do
   esac
 done
 
-function_path=${1:?"function name is required"}
-function_name="$(basename "$function_path")"
+function_full=${1:?"function name is required"}
+function_path="$(dirname "$function_full")"
+function_name="$(basename "$function_full")"
 
 add_if_in_repo() {
   local file_name="$1"
@@ -47,22 +48,23 @@ add_if_in_repo() {
   fi
 }
 
-mkdir -p "$(dirname "$function_path")"
+mkdir -p "$function_path"
 
-cat <<TS_FUNCTION >"$function_path.ts"
+cat <<TS_FUNCTION >"$function_full.ts"
 export const $function_name = () => {
   //
 }
 TS_FUNCTION
 
-add_if_in_repo "$function_path.ts"
+add_if_in_repo "$function_full.ts"
 
 if [ "$update_barrel" = true ]; then
-  if [ -f "index.ts" ]; then
+  index_file="$function_path/index.ts"
+  if [ -f "$index_file" ]; then
     export_text="export * from './$function_name'"
 
-    if ! grep -qF "$export_text" "index.ts"; then
-      echo "$export_text;" >>"index.ts"
+    if ! grep -qF "$export_text" "$index_file"; then
+      echo "$export_text;" >>"$index_file"
     fi
   fi
 fi
@@ -75,9 +77,9 @@ if [ "$gen_spec" = true ]; then
   repo_path=$(git rev-parse --show-toplevel) || exit
   test_dir="$repo_path/test/$(realpath "$PWD" --relative-to="$repo_path")"
 
-  (cd "$test_dir" && gen_ts_function_spec $add_flag "$function_path")
+  (cd "$test_dir" && gen_ts_function_spec $add_flag "$function_full")
 fi
 
 if [ "$open_in_editor" = true ]; then
-  idea64.exe "$function_path.ts"
+  idea64.exe "$function_full.ts"
 fi
