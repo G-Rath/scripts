@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
+open_in_editor=false
 update_barrel=false
 gen_spec=false
 
-options=$(getopt -o b::,g::,s:: --long update-barrel::,git-add::,spec:: -- "$@") || exit
+options=$(getopt -o b::,g::,s::o:: --long update-barrel::,git-add::,spec::,open:: -- "$@") || exit
 eval set -- "$options"
 
 while true; do
@@ -18,6 +19,10 @@ while true; do
     ;;
   -s | --spec)
     gen_spec=true
+    shift 2
+    ;;
+  -o | --open)
+    open_in_editor=true
     shift 2
     ;;
   --)
@@ -71,4 +76,8 @@ if [ "$gen_spec" = true ]; then
   test_dir="$repo_path/test/$(realpath "$PWD" --relative-to="$repo_path")"
 
   (cd "$test_dir" && gen_ts_function_spec $add_flag "$function_path")
+fi
+
+if [ "$open_in_editor" = true ]; then
+  idea64.exe "$function_path.ts"
 fi
