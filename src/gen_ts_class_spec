@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+options=$(getopt -o g:: --long git-add:: -- "$@") || exit
+eval set -- "$options"
+
+while true; do
+  case "$1" in
+  -g | --git-add)
+    repo_path=$(git rev-parse --show-toplevel) || exit
+    shift 2
+    ;;
+  --)
+    shift
+    break
+    ;;
+  *)
+    echo "Internal error!"
+    exit 1
+    ;;
+  esac
+done
+
+class_full=${1:?"class name is required"}
+class_path="$(dirname "$class_full")"
+class_name="$(basename "$class_full")"
+
+add_if_in_repo() {
+  local file_name="$1"
+
+  if [ "$repo_path" ]; then
+    git add "$file_name"
+  fi
+}
+
+mkdir -p "$class_path"
+
+cat << TS_CLASS_SPEC > "$class_full.spec.ts"
+describe('$class_name', () => {
+  //
+});
+TS_CLASS_SPEC
+
+add_if_in_repo "$class_full.spec.ts"
