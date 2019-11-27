@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-options=$(getopt -o g:: --long git-add:: -- "$@") || exit
+options=$(getopt -o g --long git-add -- "$@") || exit
 eval set -- "$options"
 
 while true; do
