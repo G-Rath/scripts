@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+
+open_in_editor=false
+update_barrel=false
+gen_spec=false
+class_imports=
+class_extends=
+class_implements=
+
+options=$(getopt -o b::,g::,s::o:: --long update-barrel::,git-add::,spec::,open::,class-imports::,class-extends::,class-implements:: -- "$@") || exit
+eval set -- "$options"
+
+while true; do
+  case "$1" in
+  -b | --update-barrel)
+    update_barrel=true
+    shift 2
+    ;;
+  --class-imports)
+    class_imports="$2"
+    shift 2
+    ;;
+  --class-extends)
+    class_extends="$2"
+    shift 2
+    ;;
+  --class-implements)
+    class_implements="$2"
+    shift 2
+    ;;
+  -g | --git-add)
+    repo_path=$(git rev-parse --show-toplevel) || exit
+    shift 2
+    ;;
+  -s | --spec)
+    gen_spec=true
+    shift 2
+    ;;
+  -o | --open)
+    open_in_editor=true
+    shift 2
+    ;;
+  --)
+    shift
+    break
+    ;;
+  *)
+    echo "Internal error!"
+    exit 1
+    ;;
+  esac
+done
+
+class_full=${1:?"class name is required"}
+class_path="$(dirname "$class_full")"
+class_name="$(basename "$class_full")"
+
+add_if_in_repo() {
+  local file_name="$1"
+
+  if [ "$repo_path" ]; then
+    git add "$file_name"
+  fi
+}
+
+mkdir -p "$class_path"
+
+if [ -n "$class_extends" ]; then
+  class_extends="extends $class_extends "
+fi
+
+if [ -n "$class_implements" ]; then
+  class_implements="implements $class_implements "
+fi
+
+cat <<TS_CLASS >"$class_full.ts"
+$class_imports
+
+export class $class_name $class_extends$class_implements{
+  //
+}
+TS_CLASS
+
+add_if_in_repo "$class_full.ts"
+
+if [ "$update_barrel" = true ]; then
+  index_file="$class_path/index.ts"
+  if [ -f "$index_file" ]; then
+    export_text="export * from './$class_name'"
+
+    if ! grep -qF "$export_text" "$index_file"; then
+      echo "$export_text;" >>"$index_file"
+    fi
+  fi
+fi
+
+if [ "$gen_spec" = true ]; then
+  if [ "$repo_path" ]; then
+    add_flag="-g"
+  fi
+
+  repo_path=$(git rev-parse --show-toplevel) || exit
+  test_dir="$repo_path/test/$(realpath "$PWD" --relative-to="$repo_path")"
+
+  (cd "$test_dir" && gen_ts_class_spec $add_flag "$class_full")
+fi
+
+if [ "$open_in_editor" = true ]; then
+  idea64.exe "$class_full.ts"
+fi
