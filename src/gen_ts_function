@@ -4,26 +4,26 @@ open_in_editor=false
 update_barrel=false
 gen_spec=false
 
-options=$(getopt -o b::,g::,s::o:: --long update-barrel::,git-add::,spec::,open:: -- "$@") || exit
+options=$(getopt -o b,g,s,o --long update-barrel,git-add,spec,open -- "$@") || exit
 eval set -- "$options"
 
 while true; do
   case "$1" in
   -b | --update-barrel)
     update_barrel=true
-    shift 2
+    shift 1
     ;;
   -g | --git-add)
     repo_path=$(git rev-parse --show-toplevel) || exit
-    shift 2
+    shift 1
     ;;
   -s | --spec)
     gen_spec=true
-    shift 2
+    shift 1
     ;;
   -o | --open)
     open_in_editor=true
-    shift 2
+    shift 1
     ;;
   --)
     shift
