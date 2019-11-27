@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-options=$(getopt -o b::,g::,s:: --long update-barrel::,git-add::,spec::,file:: -- "$@") || exit
+options=$(getopt -o b,g,s --long update-barrel,git-add,spec,file:: -- "$@") || exit
 eval set -- "$options"
 
 output_file="index.ts"
@@ -9,7 +9,7 @@ while true; do
   case "$1" in
   -g | --git-add)
     repo_path=$(git rev-parse --show-toplevel) || exit
-    shift 2
+    shift 1
     ;;
   --file)
     output_file="$(basename "$2")"
