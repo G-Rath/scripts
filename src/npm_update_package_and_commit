@@ -1,27 +1,14 @@
 #!/usr/bin/env bash
 
-# exits after echoing $1
-die_with_message() { echo "$1" && exit; }
-
-# exits if $1 is empty, echoing $2 as it does so
-die_with_message_if_empty() {
-  if [ -z "$1" ]; then
-    die_with_message "$2"
-  fi
-}
-
 get_package_version_constraint() {
-  die_with_message_if_empty "$1" "first arg must be package name"
-  package="$1"
+  package="${1:?first argument must be package name}"
 
   jq -re '.dependencies + .devDependencies | ."'"$package"'"' package.json
 }
 
-package="$1"
+package="${1:?first arg must be package name}"
 target="$2"
 lock_file="package-lock.json"
-
-die_with_message_if_empty "$package" "first arg must be package name"
 
 if [ ! -f "package.json" ]; then echo "no package.json in directory" && exit; fi
 
