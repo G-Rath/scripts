@@ -7,14 +7,14 @@ class_imports=
 class_extends=
 class_implements=
 
-options=$(getopt -o b::,g::,s::o:: --long update-barrel::,git-add::,spec::,open::,class-imports::,class-extends::,class-implements:: -- "$@") || exit
+options=$(getopt -o b,g,s,o --long update-barrel,git-add,spec,open,class-imports::,class-extends::,class-implements:: -- "$@") || exit
 eval set -- "$options"
 
 while true; do
   case "$1" in
   -b | --update-barrel)
     update_barrel=true
-    shift 2
+    shift 1
     ;;
   --class-imports)
     class_imports="$2"
@@ -30,15 +30,15 @@ while true; do
     ;;
   -g | --git-add)
     repo_path=$(git rev-parse --show-toplevel) || exit
-    shift 2
+    shift 1
     ;;
   -s | --spec)
     gen_spec=true
-    shift 2
+    shift 1
     ;;
   -o | --open)
     open_in_editor=true
-    shift 2
+    shift 1
     ;;
   --)
     shift
