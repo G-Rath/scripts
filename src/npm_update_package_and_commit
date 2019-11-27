@@ -1,5 +1,26 @@
 #!/usr/bin/env bash
 
+commit_prefix="Update"
+options=$(getopt -o C:: --long conventional:: -- "$@") || exit
+eval set -- "$options"
+
+while true; do
+  case "$1" in
+  -C | --conventional)
+    commit_prefix="${2:-chore}: update"
+    shift 2
+    ;;
+  --)
+    shift
+    break
+    ;;
+  *)
+    echo "Internal error!"
+    exit 1
+    ;;
+  esac
+done
+
 get_package_version_constraint() {
   package="${1:?first argument must be package name}"
 
@@ -29,4 +50,4 @@ echo "updated $package@$new_version"
 
 git commit \
   package.json "$lock_file" \
-  -m "Update \`$package\` to \`$new_version\` (from \`$cur_version\`)"
+  -m "$commit_prefix \`$package\` to \`$new_version\` (from \`$cur_version\`)"
