@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-options=$(getopt -o g:: --long git-add:: -- "$@") || exit
+options=$(getopt -o g --long git-add -- "$@") || exit
 eval set -- "$options"
 
 while true; do
   case "$1" in
   -g | --git-add)
     repo_path=$(git rev-parse --show-toplevel) || exit
-    shift 2
+    shift 1
     ;;
   --)
     shift
