@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+options=$(getopt -o u --long undo -- "$@") || exit
+eval set -- "$options"
+
+while true; do
+  case  "$1" in
+  -u | --undo)
+    undo=true
+    shift 1
+    ;;
+  --)
+    shift
+    break
+    ;;
+  *)
+    echo "Internal error!"
+    exit 1
+    ;;
+  esac
+done
+
+src=${1:?'Missing Source'}
+dest=${2:?'Missing Destination'}
+
+if [ "$undo" = true ]; then
+  unlink "$src"
+  mv "$dest" "$src"
+else
+  mv "$src" "$dest"
+  ln -s "$dest" "$src"
+fi
+
