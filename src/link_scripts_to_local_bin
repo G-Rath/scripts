@@ -14,6 +14,7 @@ DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
 scripts=(
   "mknano"
   "mktouch"
+  "wslgoogle"
   "move_and_link"
   "cd_to_project"
   "git_add_file_as_executable"

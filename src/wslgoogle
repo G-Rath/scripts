@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+wslview www.google.com/search?q="${1:?'search term required'}"
