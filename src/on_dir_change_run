@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# watches $PWD for changes, running the given script if any occur.
+
+do_actions() {
+  echo $(date)" - $PWD"
+  for var in $@
+  do
+    echo "$@"
+    $@
+  done
+}
+
+clear
+do_actions $@
+
+inotifywait -q -m -e modify,create . |
+while read -r filename event; do
+  clear
+  do_actions $@
+done
