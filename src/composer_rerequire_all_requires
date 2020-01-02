@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+revert() {
+  cp composer.json.bak composer.json
+}
+
+requires=$(jq '.require | keys | .[]' -r composer.json)
+
+cp composer.json composer.json.bak
+
+jq -M 'del(.require)' composer.json.bak > composer.json
+
+require_command=''
+for require in $requires; do
+  require_command="$require_command $require"
+done
+
+composer require $require_command || revert
