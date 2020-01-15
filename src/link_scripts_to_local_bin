@@ -12,6 +12,7 @@ done
 DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
 
 scripts=(
+  "wp_cli"
   "mknano"
   "mktouch"
   "wslgoogle"

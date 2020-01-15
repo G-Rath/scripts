@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+wp_cli_command=${WP_CLI_COMMAND:?'missing WP_CLI_COMMAND env variable'}
+
+path="$PWD";
+
+pwd_owner=$(stat -c '%U' .)
+
+if [ -f "wp-cli.yml" ]; then
+  path="$path/$(grep -Po "path: \K.+" wp-cli.yml)";
+fi;
+
+sudo -u "$pwd_owner" -i -- "$wp_cli_command" --path="$path" "$@"
