@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+version=${1:-'latest'}
+
+scversion="$version" # or "v0.4.7", or "latest"
+wget -qO- "https://storage.googleapis.com/shellcheck/shellcheck-${scversion?}.linux.x86_64.tar.xz" | tar -xJv
+cp "shellcheck-${scversion}/shellcheck" /usr/bin/
+rm -rf "shellcheck-${scversion}/shellcheck"
+shellcheck --version
