@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+
+const packagesToRemove = process.argv.slice(2);
+
+let yarnLock;
+
+try {
+  yarnLock = fs.readFileSync('yarn.lock').toString();
+} catch {
+  console.warn('could not read yarn.lock');
+  process.exit();
+}
+
+const findBlockInLock = (lockContents, packageVersionHeader) => {
+  const lockEntryStart = lockContents.indexOf(packageVersionHeader);
+
+  if (lockEntryStart === -1) {
+    throw new Error(
+      `failed to find package in lock matching ${packageVersionHeader}`
+    );
+  }
+
+  if (lockContents.indexOf(packageVersionHeader, lockEntryStart + 1) !== -1) {
+    throw new Error(
+      'INTEGRITY FAILURE: Multiple matches for packageVersionHeader in yarn.lock'
+    );
+  }
+
+  return lockContents.slice(
+    lockEntryStart,
+    lockContents.indexOf('\n\n', lockEntryStart)
+  );
+};
+
+const removePackageEntryFromLock = (lockContents, entryHeader) =>
+  lockContents.replace(findBlockInLock(lockContents, entryHeader), '');
+
+const findPackageHeadersInLock = (lockContents, packageName) =>
+  lockContents.match(new RegExp(`^"?${packageName}@.+:`, 'gm')) || [];
+
+const removePackageEntriesFromLock = (lockContents, packageName) =>
+  findPackageHeadersInLock(lockContents, packageName).reduce(
+    removePackageEntryFromLock,
+    lockContents
+  );
+
+const newLock = packagesToRemove.reduce(removePackageEntriesFromLock, yarnLock);
+
+if (newLock !== yarnLock) {
+  fs.writeFileSync('yarn.lock', newLock);
+
+  console.log(`removed some entries of ${packagesToRemove}`);
+}
