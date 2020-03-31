@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+git_branch=${1:-master}
+
 if [ ! -f "$PWD/package-lock.json" ]; then echo "cannot run npm here!" && exit; fi
 git status # output the status, stopping if it failed
 if [ "$?" -ne 0 ]; then exit 1; fi
@@ -8,7 +10,7 @@ if [ "$(git status -suno | wc -l)" -ne 0 ]; then echo "working directory isn't c
 
 branch_name="security-updates-$(date +%s)"
 
-git checkout master
+git checkout "$git_branch"
 git fetch --all
 git pull
 git checkout -b "$branch_name"
