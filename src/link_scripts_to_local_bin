@@ -34,6 +34,7 @@ scripts=(
   "npm_audit_fix_and_push"
   "npm_remove_package_from_lock"
   "yarn_remove_package_from_lock"
+  "yarn_upgrade_and_push"
   "npm_update_package_and_commit"
   "npm_update_package_and_commit_multiple"
 )

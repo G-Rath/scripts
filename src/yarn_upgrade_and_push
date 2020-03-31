@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+git_branch=${1:-master}
+
+if [ ! -f "$PWD/yarn.lock" ]; then echo "cannot run yarn here!" && exit; fi
+git status # output the status, stopping if it failed
+if [ "$?" -ne 0 ]; then exit 1; fi
+
+if [ "$(git status -suno | wc -l)" -ne 0 ]; then echo "working directory isn't clean!" && exit; fi
+
+branch_name="package-upgrades-$(date +%s)"
+
+git checkout "$git_branch"
+git fetch --all
+git pull
+git checkout -b "$branch_name"
+yarn upgrade
+git commit package.json yarn.lock -m 'Run `yarn upgrade`'
+git push --set-upstream origin "$branch_name"
+echo 'done'
