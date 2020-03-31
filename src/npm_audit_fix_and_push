@@ -15,6 +15,6 @@ git fetch --all
 git pull
 git checkout -b "$branch_name"
 npm audit fix --package-lock-only
-git commit package-lock.json -m 'Run `npm audit fix`'
+git commit package.json package-lock.json -m 'Run `npm audit fix`'
 git push --set-upstream origin "$branch_name"
 echo 'done'
