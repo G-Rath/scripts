@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+##################################################
+# Lets you perform a command in multiple folders
+# based on if they match a condition.
+#
+# $1:
+#   A glob pattern for selecting the folders
+#   Extended globbing is enabled for use
+#
+# $2:
+#   A command to run in each folder matched by the
+#   glob provided for $1.
+#
+#   If the command exits successfully, then the
+#   command provided for $3 is run in the folder.
+#
+# $3:
+#   A command to run in each folder that the
+#   condition command provided for $2 exits
+#   succesfully for when run in said folder.
+#
+##################################################
+
+folder=${1:?'first argument must be folder glob'}
+condition=${2:?'second argument must be condition'}
+action="${3:-echo \$PWD}"
+
+shopt -s extglob
+
+for dir in $folder/; do
+  if (cd "$dir" && bash -c "$condition" > /dev/null); then
+    echo "-------------------------------------"
+    echo "$(basename "$dir"):"
+
+    (cd "$dir" && bash -c "$action")
+    echo ""
+  fi
+done

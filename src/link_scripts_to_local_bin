@@ -29,6 +29,7 @@ scripts=(
   "gen_ts_class"
   "gen_ts_class_spec"
   "aws_get_ami_of_latest_ecs_optimized_linux"
+  "foreach_folder_do"
   "on_dir_change_run"
   "link_scripts_to_local_bin"
   "npm_audit_fix_and_push"
