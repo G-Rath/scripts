@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# lists all the unique file extentions found in the current folder
+
+find . -type f \
+  | perl -ne 'print $1 if m/\.([^.\/]+)$/' \
+  | sort -u

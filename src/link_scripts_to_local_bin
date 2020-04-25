@@ -32,6 +32,7 @@ scripts=(
   "foreach_folder_do"
   "on_dir_change_run"
   "link_scripts_to_local_bin"
+  "list_all_file_extensions_in_current_dir"
   "npm_audit_fix_and_push"
   "npm_remove_package_from_lock"
   "yarn_remove_package_from_lock"
