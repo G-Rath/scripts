@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+bucket_name=${1:?'must be the name of an s3 bucket (without s3:// prefix)'}
+
+aws s3 ls --recursive "s3://$bucket_name" \
+  | perl -ne 'print $1 if m/\.([^.\/]+)$/' \
+  | sort -uf
