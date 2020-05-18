@@ -34,6 +34,7 @@ scripts=(
   "on_dir_change_run"
   "link_scripts_to_local_bin"
   "list_all_file_extensions_in_current_dir"
+  "docker_run_postgres"
   "npm_audit_fix_and_push"
   "npm_remove_package_from_lock"
   "yarn_remove_package_from_lock"
