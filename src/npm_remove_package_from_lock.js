@@ -31,7 +31,7 @@ fs.writeFileSync(
       return value;
     },
     2
-  )
+  ) + '\n'
 );
 
 console.log(`removed ${removedCount} instances of ${packagesToRemove}`);
