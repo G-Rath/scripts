@@ -1,9 +1,13 @@
 #!/usr/bin/env node
+
+/** @type {module:fs} */
 const fs = require('fs');
 
 const packagesToRemove = process.argv.slice(2);
 
+/** @type {string} */
 let packageLock;
+
 try {
   packageLock = JSON.parse(fs.readFileSync('package-lock.json').toString());
 } catch {
@@ -20,10 +24,10 @@ fs.writeFileSync(
     (key, value) => {
       if (packagesToRemove.includes(key) && typeof value === 'object') {
         removedCount++;
-        
+
         return undefined;
       }
-      
+
       return value;
     },
     2

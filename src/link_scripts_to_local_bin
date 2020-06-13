@@ -3,15 +3,18 @@ set +e
 
 SOURCE="${BASH_SOURCE[0]}"
 while [ -h "$SOURCE" ]; do # iterate until no longer a symlink
-  DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+  DIR="$(cd -P "$(dirname "$SOURCE")" > /dev/null 2>&1 && pwd)"
   SOURCE="$(readlink "$SOURCE")"
 
   # check if relative symlink
   [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
 done
-DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+DIR="$(cd -P "$(dirname "$SOURCE")" > /dev/null 2>&1 && pwd)"
 
-scripts=(
+echo ""
+echo "---- linking sh scripts ----"
+
+sh_scripts=(
   "wp_cli"
   "mknano"
   "mktouch"
@@ -36,15 +39,27 @@ scripts=(
   "list_all_file_extensions_in_current_dir"
   "docker_run_postgres"
   "npm_audit_fix_and_push"
-  "npm_remove_package_from_lock"
-  "yarn_remove_package_from_lock"
   "yarn_upgrade_and_push"
   "npm_update_package_and_commit"
   "npm_update_package_and_commit_multiple"
 )
 
-for script in "${scripts[@]}"; do
+for script in "${sh_scripts[@]}"; do
   chmod +x "$DIR/$script"
   echo "linking $script"
-  ln -sf "$DIR/$script" /usr/local/bin/
+  ln -sf "$DIR/$script" "/usr/local/bin/$script"
+done
+
+echo ""
+echo "---- linking js scripts ----"
+
+js_scripts=(
+  "npm_remove_package_from_lock"
+  "yarn_remove_package_from_lock"
+)
+
+for script in "${js_scripts[@]}"; do
+  chmod +x "$DIR/$script.js"
+  echo "linking $script.js"
+  ln -sf "$DIR/$script.js" "/usr/local/bin/$script"
 done

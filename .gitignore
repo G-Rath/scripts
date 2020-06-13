@@ -3,3 +3,4 @@
 .vscode
 *.swp
 .env
+node_modules

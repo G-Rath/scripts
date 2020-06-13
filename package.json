@@ -1,0 +1,29 @@
+{
+  "name": "scripts",
+  "version": "1.0.0",
+  "description": "This is a loose collection of \"scripts\" that I have had use for, and that I want to keep around somewhere just in case.",
+  "keywords": [],
+  "homepage": "https://github.com/G-Rath/scripts#readme",
+  "bugs": {
+    "url": "https://github.com/G-Rath/scripts/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/G-Rath/scripts.git"
+  },
+  "license": "ISC",
+  "author": "Gareth Jones",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typecheck": "tsc --noEmit"
+  },
+  "prettier": "prettier-config-ackama",
+  "dependencies": {},
+  "devDependencies": {
+    "@schemastore/package": "0.0.5",
+    "@types/node": "^14.0.13",
+    "prettier": "^2.0.5",
+    "prettier-config-ackama": "^0.1.2",
+    "typescript": "^3.9.5"
+  }
+}

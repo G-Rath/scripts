@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
+/** @type {module:fs} */
 const fs = require('fs');
-
 const packagesToRemove = process.argv.slice(2);
 
+/** @type {string} */
 let yarnLock;
 
 try {
@@ -13,6 +14,12 @@ try {
   process.exit();
 }
 
+/**
+ * @param {string} lockContents
+ * @param {string} packageVersionHeader
+ *
+ * @return {string}
+ */
 const findBlockInLock = (lockContents, packageVersionHeader) => {
   const lockEntryStart = lockContents.indexOf(packageVersionHeader);
 
@@ -34,12 +41,31 @@ const findBlockInLock = (lockContents, packageVersionHeader) => {
   );
 };
 
+/**
+ * @param {string} lockContents
+ * @param {string} entryHeader
+ *
+ * @return {string}
+ */
 const removePackageEntryFromLock = (lockContents, entryHeader) =>
   lockContents.replace(findBlockInLock(lockContents, entryHeader), '');
 
+/**
+ * @param {string} lockContents
+ * @param {string} packageName
+ *
+ * @return {Array<string>}
+ */
 const findPackageHeadersInLock = (lockContents, packageName) =>
   lockContents.match(new RegExp(`^"?${packageName}@.+:`, 'gm')) || [];
 
+/**
+ *
+ * @param {string} lockContents
+ * @param {string} packageName
+ *
+ * @return {string}
+ */
 const removePackageEntriesFromLock = (lockContents, packageName) =>
   findPackageHeadersInLock(lockContents, packageName).reduce(
     removePackageEntryFromLock,
