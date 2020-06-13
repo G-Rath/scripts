@@ -56,6 +56,7 @@ echo "---- linking js scripts ----"
 js_scripts=(
   "npm_remove_package_from_lock"
   "yarn_remove_package_from_lock"
+  "nrun"
 )
 
 for script in "${js_scripts[@]}"; do
