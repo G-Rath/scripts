@@ -43,6 +43,7 @@ sh_scripts=(
   "yarn_upgrade_and_push"
   "npm_update_package_and_commit"
   "npm_update_package_and_commit_multiple"
+  "renovate_diff_package_versions"
 )
 
 for script in "${sh_scripts[@]}"; do

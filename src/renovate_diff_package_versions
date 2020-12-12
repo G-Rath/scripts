@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+set -e
+
+usage="$(basename "$0") [OPTIONS] <PACKAGE> <FROM> <TO>
+
+Generates a link to the package diff used by Renovate.
+
+options:
+    --open    open the link in your browser
+    --help    show this help text"
+
+options=$(getopt -o , --long help,open, -- "$@") || exit
+eval set -- "$options"
+
+open= # set to nothing
+
+while true; do
+  case "$1" in
+  --help)
+    echo "$usage"
+    exit
+    ;;
+  --open)
+    open=true
+    shift 1
+    ;;
+  --)
+    shift
+    break
+    ;;
+  *)
+    echo "Unknown option"
+    exit 1
+    ;;
+  esac
+done
+
+package=${1:-'must be package name'}
+from=${2:-'must be from version'}
+to=${3:-'must be to version'}
+
+url="https://app.renovatebot.com/package-diff?name=$package&from=$from&to=$to"
+
+echo "$url"
+
+if [ "$open" ]; then
+  $BROWSER "$url"
+fi
