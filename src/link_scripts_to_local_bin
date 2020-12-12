@@ -31,6 +31,7 @@ sh_scripts=(
   "gen_ts_function_specs"
   "gen_ts_class"
   "gen_ts_class_spec"
+  "whats_my_public_ip"
   "aws_get_ami_of_latest_ecs_optimized_linux"
   "aws_list_file_extensions_in_s3_bucket"
   "foreach_folder_do"
