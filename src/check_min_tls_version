@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+domain=${1:?'must be domain to test'}
+
+check_tls_version() {
+  tls_version=${1:?'must be tls version'}
+
+  curl -so /dev/null --tls-max "$tls_version" --tlsv"$tls_version" "$domain"
+
+  exit_code=$?
+
+  # libcurl uses 35 for CURLE_SSL_CONNECT_ERROR, which we assume
+  # is because of TLS version, but it could be something else
+  # like a bad SSL cert - please always verify manually!
+  if [ $exit_code -eq 35 ]; then
+    echo "TLS v$tls_version: Unsupported (code $exit_code)"
+  elif [ $exit_code -ne 0 ]; then
+    echo "TLS v$tls_version: Unknown (code $exit_code)"
+  else
+    echo "TLS v$tls_version: Supported"
+  fi
+
+}
+
+# check we can access the site first before going any further
+if ! curl -so /dev/null "$domain"; then
+  echo "error, site is not accessible!"
+
+  exit 1
+fi
+
+echo "Site is accessible, performing basic TLS version check against $domain"
+
+check_tls_version "1.0"
+check_tls_version "1.1"
+check_tls_version "1.2"
+check_tls_version "1.3"
+
+echo "The results above should be manually checked to ensure SSL errors were due to unsupported TLS versions"
