@@ -61,6 +61,7 @@ js_scripts=(
   "yarn_remove_package_from_lock"
   "composer_what_requires_package"
   "nrun"
+  "terraform_extract_blocks"
 )
 
 for script in "${js_scripts[@]}"; do
