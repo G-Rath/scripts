@@ -29,7 +29,9 @@ const findBlockInLock = (lockContents, packageVersionHeader) => {
     );
   }
 
-  if (lockContents.indexOf(packageVersionHeader, lockEntryStart + 1) !== -1) {
+  // add a newline to ensure that we're matching against the "whole line" otherwise
+  // we'll error on e.g. `first-pkg` and `my-first-pkg` when trying to remove `first-pgk`
+  if (lockContents.indexOf(`\n${packageVersionHeader}`, lockEntryStart + 1) !== -1) {
     throw new Error(
       'INTEGRITY FAILURE: Multiple matches for packageVersionHeader in yarn.lock'
     );
