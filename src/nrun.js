@@ -30,8 +30,8 @@ if (!scriptName || !scriptCommand) {
 
 const escapedArgs = scriptArgs.map(arg => `${arg.replace(/"/g, '\\"')}`);
 
-console.log('> nrun.js', scriptName);
-console.log('>', scriptCommand, ...escapedArgs);
+console.warn('> nrun.js', scriptName);
+console.warn('>', scriptCommand, ...escapedArgs);
 
 spawn(
   'npm', //
