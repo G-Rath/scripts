@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# Script for adjusting the permissions of files so that they're not globally
+# open to everyone, while preserving execution permission on directories
+#
+# This is useful for WSL environments, as Windows operations typically result
+# in the file permissions being 777 which means commands like "ls" show lots of
+# green coloring, making it hard to find actual executables.
+
+maxdepth=${1:-1}
+
+set -e
+
+while IFS= read -r -d '' file; do
+  if [ "$(stat -c "%a" "$file")" == 777 ]; then
+    if [ -d "$file" ]; then
+      chmod 755 "$file"
+    else
+      chmod 644 "$file"
+    fi
+    echo "$file"
+  fi
+done < <(find . -maxdepth "$maxdepth" -executable -print0)
