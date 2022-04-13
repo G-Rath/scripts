@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# Script for removing an email from all heroku apps that can be accessed
+# with the currently authenticated user.
+
+set -e
+
+email=${1:-'must be email of person to remove access from'}
+
+echo "Removing $email from all accessible heroku apps:"
+
+while IFS= read -r app; do
+  if heroku access:remove -a "$app" "$email"; then
+    echo " ▸    Removed $email from $app"
+  fi
+done <<< "$(heroku apps --json | jq -r '.[].name')"
+
+echo ""
+echo "Removing $email from all accessible heroku teams:"
+while IFS= read -r team; do
+  if heroku members:remove -t "$team" "$email"; then
+    echo " ▸    Removed $email from $team"
+  fi
+done <<< "$(heroku teams --json | jq -r '.[].name')"
+
