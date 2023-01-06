@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-project_paths=$(ls -1d "$WWORKSPACE"/projects-*/*/ "$WWORKSPACE"/prefer-projects/*/ "$WWORKSPACE"/personal-projects/*/ | grep "$1")
+project_paths=$(ls -1d "$CD_TO_PROJECT_ROOT"/projects-*/*/ | grep "$1")
 
 echo "$project_paths"
 project_path=$(echo "$project_paths" | head -n1)
