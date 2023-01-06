@@ -4,8 +4,23 @@
 
 const { join } = require('path');
 const { spawn } = require('child_process');
-/** @type {import('@schemastore/package').JSONSchemaForNPMPackageJsonFiles} */
-const { name, scripts = {} } = require(join(process.cwd(), 'package.json'));
+
+const readPackageJsonOrExit = () => {
+  try {
+    /** @type {import('@schemastore/package').JSONSchemaForNPMPackageJsonFiles} */
+    return require(join(process.cwd(), 'package.json'));
+  } catch (error) {
+    // if we could not find a `package.json`, don't do anything
+    if (error.code === 'MODULE_NOT_FOUND') {
+      //  console.warn(process.env);
+      process.exit();
+    }
+
+    throw error;
+  }
+};
+
+const { name, scripts = {} } = readPackageJsonOrExit();
 
 const scriptArgs = process.argv.slice(2);
 
