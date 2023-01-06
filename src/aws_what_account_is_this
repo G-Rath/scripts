@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+set -e
+
+usage="$(basename "$0") <account-id> [--help] [-p profile]
+
+Gets the name of the aws account with the given id.
+The id must belong to an account owned by the organisation
+of the aws credentials being used to make the query.
+
+flags:
+        --help    show this help text
+    -p, --profile the name of the aws profile to use"
+
+aws_profile="$DEFAULT_AWS_ACCOUNT"
+
+options=$(getopt -o p: --long help,profile: -- "$@") || exit
+eval set -- "$options"
+
+while true; do
+  case "$1" in
+    --help)
+      echo "$usage"
+      exit
+      ;;
+    -p | --profile)
+      aws_profile="$2"
+      shift 2
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      echo "Unknown flag or argument"
+      exit 1
+      ;;
+  esac
+done
+
+# ensure theres at least one account id
+_="${1:?must be an account id}"
+
+set +e
+
+for account_id in "$@"; do
+  name=$(
+    aws --profile "$aws_profile" \
+      organizations describe-account \
+      --query 'Account.Name' \
+      --output text \
+      --account-id "$account_id" 2>&1 | tr -d '\n'
+  )
+
+  echo "$account_id: $name"
+done
