@@ -42,6 +42,7 @@ sh_scripts=(
   "link_scripts_to_local_bin"
   "list_all_file_extensions_in_current_dir"
   "docker_run_postgres"
+  "docker_run_redis"
   "npm_audit_fix_and_push"
   "yarn_upgrade_and_push"
   "npm_update_package_and_commit"

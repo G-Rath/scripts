@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+set -e
+
+usage="$(basename "$0") [OPTIONS]
+
+Runs an instance of redis using a docker container.
+The container is named using the pattern \"redis\",
+and will be created if it does not already exist.
+
+options:
+    --fresh   create the container afresh, removing any existing containers with the same name
+    --help    show this help text"
+
+options=$(getopt -o , --long help,fresh, -- "$@") || exit
+eval set -- "$options"
+
+fresh= # set to nothing
+
+while true; do
+  case "$1" in
+  --help)
+    echo "$usage"
+    exit
+    ;;
+  --fresh)
+    fresh=true
+    shift 1
+    ;;
+  --)
+    shift
+    break
+    ;;
+  *)
+    echo "Unknown option"
+    exit 1
+    ;;
+  esac
+done
+
+name="redis-cache"
+
+if [ "$fresh" ] && [ "$(docker ps -aq -f name="$name")" ]; then
+  echo "removing existing container named $name"
+  docker stop "$name"
+  docker rm "$name"
+fi
+
+if [ "$(docker ps -q -f name="$name")" ]; then
+  echo "a container with the name $name is already running"
+  exit 1
+fi
+
+if [ ! "$(docker ps -aq -f name="$name")" ]; then
+  docker create \
+    --name "$name" \
+    -p 6379:6379 \
+    redis
+fi
+
+docker start "$name"
+docker logs "$name" -f
