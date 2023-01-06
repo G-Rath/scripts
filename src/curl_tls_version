@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+domain=${1:?'must be domain to test'}
+tls_version=${2:?'must be a tls version'}
+
+curl -svo /dev/null --tls-max "$tls_version" --tlsv"$tls_version" "$domain"

@@ -22,6 +22,7 @@ sh_scripts=(
   "move_and_link"
   "cd_to_project"
   "check_min_tls_version"
+  "curl_tls_version"
   "git_add_file_as_executable"
   "git_rename_and_commit"
   "git_compare_branches"
