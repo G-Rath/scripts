@@ -5,8 +5,10 @@ const fs = require('fs');
 const [, , fromFile, blockType, toFile] = process.argv;
 
 if (!fromFile) {
+  const maybeBlockType = blockType ? `${blockType} ` : '';
+
   throw new Error(
-    `first argument must be path to file to extract ${blockType} blocks from`
+    `first argument must be path to file to extract ${maybeBlockType}blocks from`
   );
 }
 
