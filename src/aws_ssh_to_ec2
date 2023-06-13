@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# ssh helper script that enhances the recommended use of SSM for accessing EC2 instances
+# to also push your public key into the instance first using the EC2 instance connect API
+#
+# to use, add the following to your .ssh/config:
+#
+# host i-* mi-*
+#   ProxyCommand sh -c "/path/to/scripts/src/aws_ssh_to_ec2 %h %p %r"
+
+instance_id=$1
+port=$2
+user=$3
+ssh_public_key="file://~/.ssh/id_ed25519.pub"
+
+echo "sending public ssh key $ssh_public_key to $user@$instance_id with..."
+
+aws ec2-instance-connect send-ssh-public-key --instance-id "$instance_id" --instance-os-user "$user" --ssh-public-key "$ssh_public_key"
+aws ssm start-session --target "$instance_id" --document-name AWS-StartSSHSession --parameters "portNumber=$port" --reason "$USER@$(hostname)"
