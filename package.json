@@ -18,12 +18,12 @@
     "typecheck": "tsc --noEmit"
   },
   "prettier": "prettier-config-ackama",
-  "dependencies": {},
   "devDependencies": {
-    "@schemastore/package": "0.0.5",
-    "@types/node": "^14.0.13",
-    "prettier": "^2.0.5",
-    "prettier-config-ackama": "^0.1.2",
-    "typescript": "^3.9.5"
+    "@schemastore/package": "0.0.10",
+    "@tsconfig/node20": "^20.1.4",
+    "@types/node": "^20.0.0",
+    "prettier": "^3.0.0",
+    "prettier-config-ackama": "^1.0.0",
+    "typescript": "^5.5.0"
   }
 }

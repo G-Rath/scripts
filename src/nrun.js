@@ -11,6 +11,7 @@ const readPackageJsonOrExit = () => {
     return require(join(process.cwd(), 'package.json'));
   } catch (error) {
     // if we could not find a `package.json`, don't do anything
+    // @ts-expect-error: it's not worth trying to cast this to ErrnoException
     if (error.code === 'MODULE_NOT_FOUND') {
       //  console.warn(process.env);
       process.exit();
