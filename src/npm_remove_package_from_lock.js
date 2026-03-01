@@ -22,48 +22,50 @@ fs.writeFileSync(
   JSON.stringify(
     packageLock,
     (key, value) => {
-      if (typeof value === 'object') {
-        // handles lockfile v2+ format
-        if (key === 'packages') {
-          return Object.fromEntries(
-            Object.entries(value).filter(([key]) => {
-              if (
-                packagesToRemove.some(
-                  pkg =>
-                    key.endsWith(`node_modules/${pkg}`) ||
-                    key === `node_modules/${pkg}`
-                )
-              ) {
-                removedCount++;
+      if (typeof value !== 'object') {
+        return value;
+      }
 
-                return false;
-              }
+      // handles lockfile v2+ format
+      if (key === 'packages') {
+        return Object.fromEntries(
+          Object.entries(value).filter(([key]) => {
+            if (
+              packagesToRemove.some(
+                pkg =>
+                  key.endsWith(`node_modules/${pkg}`) ||
+                  key === `node_modules/${pkg}`
+              )
+            ) {
+              removedCount++;
 
-              // remove the dependency if its a child of a package to remove
-              // just without counting it as a removed package
-              return !packagesToRemove.some(pkg =>
-                key.includes(`node_modules/${pkg}/`)
-              );
-            })
-          );
-        }
+              return false;
+            }
 
-        // handles lockfile v1 format
-        if (key === 'dependencies') {
-          return Object.fromEntries(
-            Object.entries(value).filter(([key, v]) => {
-              // lockfile v2+ has a "dependencies" object with string values
-              // which specifies the contraints, so we don't want remove that
-              if (typeof v === 'object' && packagesToRemove.includes(key)) {
-                removedCount++;
+            // remove the dependency if its a child of a package to remove
+            // just without counting it as a removed package
+            return !packagesToRemove.some(pkg =>
+              key.includes(`node_modules/${pkg}/`)
+            );
+          })
+        );
+      }
 
-                return false;
-              }
+      // handles lockfile v1 format
+      if (key === 'dependencies') {
+        return Object.fromEntries(
+          Object.entries(value).filter(([key, v]) => {
+            // lockfile v2+ has a "dependencies" object with string values
+            // which specifies the contraints, so we don't want remove that
+            if (typeof v === 'object' && packagesToRemove.includes(key)) {
+              removedCount++;
 
-              return true;
-            })
-          );
-        }
+              return false;
+            }
+
+            return true;
+          })
+        );
       }
 
       return value;
