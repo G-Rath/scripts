@@ -17,6 +17,8 @@ try {
 
 let removedCount = 0;
 
+const isJustScope = pkg => pkg.startsWith('@') && !pkg.includes('/');
+
 fs.writeFileSync(
   'package-lock.json',
   JSON.stringify(
@@ -34,7 +36,8 @@ fs.writeFileSync(
               packagesToRemove.some(
                 pkg =>
                   key.endsWith(`node_modules/${pkg}`) ||
-                  key === `node_modules/${pkg}`
+                  key === `node_modules/${pkg}` ||
+                  (isJustScope(pkg) && key.includes(`node_modules/${pkg}/`))
               )
             ) {
               removedCount++;
@@ -44,8 +47,10 @@ fs.writeFileSync(
 
             // remove the dependency if its a child of a package to remove
             // just without counting it as a removed package
-            return !packagesToRemove.some(pkg =>
-              key.includes(`node_modules/${pkg}/`)
+            return !packagesToRemove.some(
+              pkg =>
+                key.includes(`node_modules/${pkg}/`) ||
+                (isJustScope(pkg) && key.includes(`node_modules/${pkg}/`))
             );
           })
         );
@@ -57,7 +62,13 @@ fs.writeFileSync(
           Object.entries(value).filter(([key, v]) => {
             // lockfile v2+ has a "dependencies" object with string values
             // which specifies the contraints, so we don't want remove that
-            if (typeof v === 'object' && packagesToRemove.includes(key)) {
+            if (
+              typeof v === 'object' &&
+              packagesToRemove.some(
+                pkg =>
+                  key === pkg || (isJustScope(pkg) && key.startsWith(`${pkg}/`))
+              )
+            ) {
               removedCount++;
 
               return false;
