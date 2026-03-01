@@ -60,8 +60,14 @@ const removePackageEntryFromLock = (lockContents, entryHeader) =>
  *
  * @return {Array<string>}
  */
-const findPackageHeadersInLock = (lockContents, packageName) =>
-  lockContents.match(new RegExp(`^"?${packageName}@.+:`, 'gm')) || [];
+const findPackageHeadersInLock = (lockContents, packageName) => {
+  const packagePattern =
+    packageName.startsWith('@') && !packageName.includes('/')
+      ? `${packageName}\/.+`
+      : packageName;
+
+  return lockContents.match(new RegExp(`^"?${packagePattern}@.+:`, 'gm')) || [];
+};
 
 /**
  *
