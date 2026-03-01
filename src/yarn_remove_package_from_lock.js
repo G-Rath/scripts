@@ -40,7 +40,7 @@ const findBlockInLock = (lockContents, packageVersionHeader) => {
   }
 
   return lockContents.slice(
-    lockEntryStart,
+    lockEntryStart - 1,
     lockContents.indexOf('\n\n', lockEntryStart)
   );
 };
